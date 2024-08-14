@@ -68,11 +68,23 @@ st.markdown("""
         border: 2px solid #ffb6c1;
         border-radius: 10px;
     }
-    .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
+    .chat-message {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 5px 0;
+        width: 60%;
+        text-align: right;
+    }
+    .user-message {
+        background-color: #ffddcc;
+        margin-left: auto;
+        margin-right: 0;
+    }
+    .mama-message {
+        background-color: #fff2e6;
+        margin-left: auto;
+        margin-right: 0;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -83,8 +95,8 @@ st.markdown("<h4 style='text-align: center; color: #d2691e;'> اتكلم مع م
 if st.session_state["chat_history"]:
     st.markdown("<h3 style='color: #d2691e;'>كلامك مع ماما:</h3>", unsafe_allow_html=True)
     for query, response in st.session_state["chat_history"]:
-        st.markdown(f"<p style='color: #d2691e;'><strong>أنت:</strong> {query}</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color: #d2691e;'><strong>ماما:</strong> {response} </p>", unsafe_allow_html=True)
+        st.markdown(f"<div class='chat-message user-message'><strong>أنت:</strong> {query}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='chat-message mama-message'><strong>ماما:</strong> {response}</div>", unsafe_allow_html=True)
 
 # Text input for user query placed below the conversation
 user_query = st.text_input("ابعت..", "")
