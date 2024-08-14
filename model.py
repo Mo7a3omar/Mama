@@ -86,6 +86,12 @@ st.markdown("""
         margin-left: auto;
         margin-right: 0;
     }
+    .center-text {
+        text-align: center;
+        color: #d2691e;
+        font-size: 24px;
+        margin-top: 20px;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -93,7 +99,7 @@ st.markdown("<h4 style='text-align: center; color: #d2691e;'> اتكلم مع م
 
 # Display the chat history with mommy-themed style
 if st.session_state["chat_history"]:
-    st.markdown("<h3 style='color: #d2691e;'>كلامك مع ماما:</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 class='center-text'>كلامك مع ماما:</h3>", unsafe_allow_html=True)
     for query, response in st.session_state["chat_history"]:
         st.markdown(f"<div class='chat-message user-message'><strong>أنت:</strong> {query}</div>", unsafe_allow_html=True)
         st.markdown(f"<div class='chat-message mama-message'><strong>ماما:</strong> {response}</div>", unsafe_allow_html=True)
