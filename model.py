@@ -21,13 +21,16 @@ class MamaBot:
         except Exception as e:
             return f"An error occurred while processing your request: {str(e)}"
 
-# Initialize chat history and input state in Streamlit session state
+# Initialize chat history and user query in Streamlit session state
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
+if "user_query" not in st.session_state:
+    st.session_state["user_query"] = ""
+
 # Define the function to handle user input and generate responses
 def mama_bot_response():
-    query = st.session_state.get("user_query", "").strip()
+    query = st.session_state["user_query"].strip()
     
     if query:  # Only proceed if the query is not empty
         id = "ag:befd46a2:20240813:mama:e547f219"  # Replace with the appropriate agent ID for MamaBot
@@ -120,3 +123,4 @@ if st.button("ابعت لماما"):
 # Center the "Clear Chat" button
 if st.button("امسح المحادثة"):
     st.session_state["chat_history"] = []
+    st.session_state["user_query"] = ""  # Also reset the user query when clearing chat
