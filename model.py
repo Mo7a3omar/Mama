@@ -28,11 +28,15 @@ if "chat_history" not in st.session_state:
 if "user_query" not in st.session_state:
     st.session_state["user_query"] = ""
 
+if "last_message" not in st.session_state:
+    st.session_state["last_message"] = ""
+
 # Define the function to handle user input and generate responses
 def mama_bot_response():
     query = st.session_state["user_query"].strip()
-    
-    if query:  # Only proceed if the query is not empty
+
+    # Check if the query is the same as the last processed message to avoid duplicates
+    if query and query != st.session_state["last_message"]:
         id = "ag:befd46a2:20240813:mama:e547f219"  # Replace with the appropriate agent ID for MamaBot
 
         # Create an instance of MamaBot
@@ -41,6 +45,9 @@ def mama_bot_response():
 
         # Update the chat history
         st.session_state["chat_history"].append((query, response))
+
+        # Store the last processed message
+        st.session_state["last_message"] = query
 
         # Clear the user query after processing
         st.session_state["user_query"] = ""
@@ -123,4 +130,4 @@ if st.button("ابعت لماما"):
 # Center the "Clear Chat" button
 if st.button("امسح المحادثة"):
     st.session_state["chat_history"] = []
-    st.session_state["user_query"] = ""  # Also reset the user query when clearing chat
+    st.session_state["last_message"] = ""
