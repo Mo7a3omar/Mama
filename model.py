@@ -25,9 +25,6 @@ class MamaBot:
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
-if "user_query" not in st.session_state:
-    st.session_state["user_query"] = ""
-
 # Define the function to handle user input and generate responses
 def mama_bot_response(query):
     id = "ag:befd46a2:20240813:mama:e547f219"  # Replace with the appropriate agent ID for MamaBot
@@ -38,7 +35,6 @@ def mama_bot_response(query):
 
     # Update the chat history
     st.session_state["chat_history"].append((query, response))
-    st.session_state["user_query"] = ""  # Clear the input field after sending the message
 
 # Mommy-themed Streamlit UI
 st.markdown("""
@@ -91,15 +87,15 @@ if st.session_state["chat_history"]:
         st.markdown(f"<p style='color: #d2691e;'><strong>ماما:</strong> {response} 🍪</p>", unsafe_allow_html=True)
 
 # Text input for user query placed below the conversation
-user_query = st.text_input("ابعت..", st.session_state["user_query"])
+user_query = st.text_input("ابعت..", "")
 
-# Center the "Send to Mama" button
-if st.button("ابعت  لماما", key="send"):
-    if user_query:
-        st.session_state["user_query"] = user_query  # Store the query in session state
+# Ensure we don't reprocess the same input
+if st.button("ابعت  لماما", key="send") and user_query:
+    if "last_query" not in st.session_state or st.session_state["last_query"] != user_query:
+        st.session_state["last_query"] = user_query
         mama_bot_response(user_query)
-        st.experimental_rerun()  # Force a rerun to immediately update the state
 
 # Center the "Clear Chat" button
 if st.button("امسح الكلام", key="clear"):
     st.session_state["chat_history"] = []
+    st.session_state["last_query"] = ""
