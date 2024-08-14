@@ -122,7 +122,7 @@ st.markdown("<h4 style='text-align: center; color: #d2691e;'> اتكلم مع م
 
 # Start Button to initialize the conversation
 if not st.session_state["conversation_started"]:
-    if st.button("Start Conversation"):
+    if st.button("اتكلم مع ماما من هنا"):
         st.session_state["conversation_started"] = True
 else:
     # Display the chat history with mommy-themed style
