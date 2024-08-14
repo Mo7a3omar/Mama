@@ -127,7 +127,7 @@ if not st.session_state["conversation_started"]:
 else:
     # Display the chat history with mommy-themed style
     if st.session_state["chat_history"]:
-        st.markdown("<h3 class='center-text'>كلامك مع ماما:</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 class='center-text'>كلامك مع ماما</h3>", unsafe_allow_html=True)
         for query, response in st.session_state["chat_history"]:
             st.markdown(f"<div class='chat-message user-message'><strong>أنت:</strong> {query}</div>", unsafe_allow_html=True)
             st.markdown(f"<div class='chat-message mama-message'><strong>ماما:</strong> {response}</div>", unsafe_allow_html=True)
