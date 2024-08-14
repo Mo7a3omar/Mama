@@ -118,7 +118,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h4 style='text-align: center; color: #d2691e;'> اتكلم مع ماما </h4>", unsafe_allow_html=True)
+st.markdown("<h4 style='text-align: center; color: #d2691e;'> ماما </h4>", unsafe_allow_html=True)
 
 # Start Button to initialize the conversation
 if not st.session_state["conversation_started"]:
