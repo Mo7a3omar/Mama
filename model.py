@@ -19,7 +19,8 @@ class MamaBot:
             output = chat_response.choices[0].message.content
             return output
         except Exception as e:
-            return f"An error occurred while processing your request: {str(e)}"
+            # Handle or log the error if needed, but do not display it
+            return "An error occurred, please try again later."
 
 # Initialize chat history and user query in Streamlit session state
 if "chat_history" not in st.session_state:
@@ -33,24 +34,28 @@ if "last_message" not in st.session_state:
 
 # Define the function to handle user input and generate responses
 def mama_bot_response():
-    query = st.session_state["user_query"].strip()
+    try:
+        query = st.session_state["user_query"].strip()
 
-    # Check if the query is the same as the last processed message to avoid duplicates
-    if query and query != st.session_state["last_message"]:
-        id = "ag:befd46a2:20240813:mama:e547f219"  # Replace with the appropriate agent ID for MamaBot
+        # Check if the query is the same as the last processed message to avoid duplicates
+        if query and query != st.session_state["last_message"]:
+            id = "ag:befd46a2:20240813:mama:e547f219"  # Replace with the appropriate agent ID for MamaBot
 
-        # Create an instance of MamaBot
-        mamabot = MamaBot(id, query)
-        response = mamabot.send_query()
+            # Create an instance of MamaBot
+            mamabot = MamaBot(id, query)
+            response = mamabot.send_query()
 
-        # Update the chat history
-        st.session_state["chat_history"].append((query, response))
+            # Update the chat history
+            st.session_state["chat_history"].append((query, response))
 
-        # Store the last processed message
-        st.session_state["last_message"] = query
+            # Store the last processed message
+            st.session_state["last_message"] = query
 
-        # Clear the user query after processing
-        st.session_state["user_query"] = ""
+            # Clear the user query after processing
+            st.session_state["user_query"] = ""
+    except Exception as e:
+        # Optionally log the error, but don't show it in the UI
+        pass
 
 # Mommy-themed Streamlit UI
 st.markdown("""
