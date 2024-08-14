@@ -19,7 +19,6 @@ class MamaBot:
             output = chat_response.choices[0].message.content
             return output
         except Exception as e:
-            # Handle or log the error if needed, but do not display it
             return "An error occurred, please try again later."
 
 # Initialize chat history and user query in Streamlit session state
@@ -31,6 +30,9 @@ if "user_query" not in st.session_state:
 
 if "last_message" not in st.session_state:
     st.session_state["last_message"] = ""
+
+if "conversation_started" not in st.session_state:
+    st.session_state["conversation_started"] = False
 
 # Define the function to handle user input and generate responses
 def mama_bot_response():
@@ -118,21 +120,27 @@ st.markdown("""
 
 st.markdown("<h4 style='text-align: center; color: #d2691e;'> اتكلم مع ماما </h4>", unsafe_allow_html=True)
 
-# Display the chat history with mommy-themed style
-if st.session_state["chat_history"]:
-    st.markdown("<h3 class='center-text'>كلامك مع ماما:</h3>", unsafe_allow_html=True)
-    for query, response in st.session_state["chat_history"]:
-        st.markdown(f"<div class='chat-message user-message'><strong>أنت:</strong> {query}</div>", unsafe_allow_html=True)
-        st.markdown(f"<div class='chat-message mama-message'><strong>ماما:</strong> {response}</div>", unsafe_allow_html=True)
+# Start Button to initialize the conversation
+if not st.session_state["conversation_started"]:
+    if st.button("Start Conversation"):
+        st.session_state["conversation_started"] = True
+else:
+    # Display the chat history with mommy-themed style
+    if st.session_state["chat_history"]:
+        st.markdown("<h3 class='center-text'>كلامك مع ماما:</h3>", unsafe_allow_html=True)
+        for query, response in st.session_state["chat_history"]:
+            st.markdown(f"<div class='chat-message user-message'><strong>أنت:</strong> {query}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='chat-message mama-message'><strong>ماما:</strong> {response}</div>", unsafe_allow_html=True)
 
-# Text input for user query placed below the conversation
-st.text_input("اكتب رسالتك هنا...", key="user_query", placeholder="اكتب هنا...")
+    # Text input for user query placed below the conversation
+    st.text_input("اكتب رسالتك هنا...", key="user_query", placeholder="اكتب هنا...")
 
-# Center the "Send to Mama" button and handle the click event
-if st.button("ابعت لماما"):
-    mama_bot_response()
+    # Center the "Send to Mama" button and handle the click event
+    if st.button("ابعت لماما"):
+        mama_bot_response()
 
-# Center the "Clear Chat" button
-if st.button("امسح المحادثة"):
-    st.session_state["chat_history"] = []
-    st.session_state["last_message"] = ""
+    # Center the "Clear Chat" button
+    if st.button("امسح المحادثة"):
+        st.session_state["chat_history"] = []
+        st.session_state["last_message"] = ""
+        st.session_state["conversation_started"] = False  # Reset the conversation started flag
