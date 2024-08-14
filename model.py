@@ -21,20 +21,26 @@ class MamaBot:
         except Exception as e:
             return f"An error occurred while processing your request: {str(e)}"
 
-# Initialize chat history in Streamlit session state
+# Initialize chat history and input state in Streamlit session state
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
 # Define the function to handle user input and generate responses
-def mama_bot_response(query):
-    id = "ag:befd46a2:20240813:mama:e547f219"  # Replace with the appropriate agent ID for MamaBot
+def mama_bot_response():
+    query = st.session_state.get("user_query", "").strip()
+    
+    if query:  # Only proceed if the query is not empty
+        id = "ag:befd46a2:20240813:mama:e547f219"  # Replace with the appropriate agent ID for MamaBot
 
-    # Create an instance of MamaBot
-    mamabot = MamaBot(id, query)
-    response = mamabot.send_query()
+        # Create an instance of MamaBot
+        mamabot = MamaBot(id, query)
+        response = mamabot.send_query()
 
-    # Update the chat history
-    st.session_state["chat_history"].append((query, response))
+        # Update the chat history
+        st.session_state["chat_history"].append((query, response))
+
+        # Clear the user query after processing
+        st.session_state["user_query"] = ""
 
 # Mommy-themed Streamlit UI
 st.markdown("""
@@ -105,15 +111,12 @@ if st.session_state["chat_history"]:
         st.markdown(f"<div class='chat-message mama-message'><strong>ماما:</strong> {response}</div>", unsafe_allow_html=True)
 
 # Text input for user query placed below the conversation
-user_query = st.text_input("ابعت..", "")
+st.text_input("اكتب رسالتك هنا...", key="user_query", placeholder="اكتب هنا...")
 
-# Ensure we don't reprocess the same input
-if st.button("ابعت  لماما", key="send") and user_query:
-    if "last_query" not in st.session_state or st.session_state["last_query"] != user_query:
-        st.session_state["last_query"] = user_query
-        mama_bot_response(user_query)
+# Center the "Send to Mama" button and handle the click event
+if st.button("ابعت لماما"):
+    mama_bot_response()
 
 # Center the "Clear Chat" button
-if st.button("امسح الكلام", key="clear"):
+if st.button("امسح المحادثة"):
     st.session_state["chat_history"] = []
-    st.session_state["last_query"] = ""
