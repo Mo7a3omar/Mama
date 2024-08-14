@@ -21,20 +21,29 @@ class MamaBot:
         except Exception as e:
             return f"An error occurred while processing your request: {str(e)}"
 
-# Initialize chat history in Streamlit session state
+# Initialize chat history and last query in Streamlit session state
 if "chat_history" not in st.session_state:
     st.session_state["chat_history"] = []
 
+if "user_query" not in st.session_state:
+    st.session_state["user_query"] = ""
+
 # Define the function to handle user input and generate responses
-def mama_bot_response(query):
+def mama_bot_response():
     id = "ag:befd46a2:20240813:mama:e547f219"  # Replace with the appropriate agent ID for MamaBot
 
-    # Create an instance of MamaBot
-    mamabot = MamaBot(id, query)
-    response = mamabot.send_query()
+    query = st.session_state["user_query"]
 
-    # Update the chat history
-    st.session_state["chat_history"].append((query, response))
+    if query:
+        # Create an instance of MamaBot
+        mamabot = MamaBot(id, query)
+        response = mamabot.send_query()
+
+        # Update the chat history
+        st.session_state["chat_history"].append({"user": query, "mama": response})
+
+        # Clear the user query after processing
+        st.session_state["user_query"] = ""
 
 # Mommy-themed Streamlit UI
 st.markdown("""
@@ -68,34 +77,38 @@ st.markdown("""
         border: 2px solid #ffb6c1;
         border-radius: 10px;
     }
-    .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
+    .chat-message {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 5px 0;
+        width: 80%;
+    }
+    .user-message {
+        background-color: #ffddcc;
+        margin-left: auto;
+    }
+    .mama-message {
+        background-color: #fff2e6;
+        margin-right: auto;
     }
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown("<h4 style='text-align: center; color: #d2691e;'> اتكلم مع ماما يا حبيبي 💖</h4>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; color: #d2691e;'>اتكلم مع ماما </h2>", unsafe_allow_html=True)
 
-# Display the chat history with mommy-themed style
-if st.session_state["chat_history"]:
-    st.markdown("<h3 style='color: #d2691e;'>كلامك مع ماما:</h3>", unsafe_allow_html=True)
-    for query, response in st.session_state["chat_history"]:
-        st.markdown(f"<p style='color: #d2691e;'><strong>أنت:</strong> {query}</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color: #d2691e;'><strong>ماما:</strong> {response} </p>", unsafe_allow_html=True)
+# Display the chat history with better formatting
+for message in st.session_state["chat_history"]:
+    st.markdown(f"<div class='chat-message user-message'><strong>أنت:</strong> {message['user']}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='chat-message mama-message'><strong>ماما:</strong> {message['mama']}</div>", unsafe_allow_html=True)
 
 # Text input for user query placed below the conversation
-user_query = st.text_input("ابعت..", "")
+st.text_input("اكتب رسالتك هنا...", key="user_query", placeholder="اكتب هنا...")
 
-# Ensure we don't reprocess the same input
-if st.button("ابعت  لماما", key="send") and user_query:
-    if "last_query" not in st.session_state or st.session_state["last_query"] != user_query:
-        st.session_state["last_query"] = user_query
-        mama_bot_response(user_query)
+# Center the "Send to Mama" button and handle the click event
+if st.button("ابعت لماما", key="send"):
+    mama_bot_response()
 
 # Center the "Clear Chat" button
-if st.button("امسح الكلام", key="clear"):
+if st.button("امسح المحادثة", key="clear"):
     st.session_state["chat_history"] = []
-    st.session_state["last_query"] = ""
