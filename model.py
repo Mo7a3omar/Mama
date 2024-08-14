@@ -84,7 +84,7 @@ if st.session_state["chat_history"]:
     st.markdown("<h3 style='color: #d2691e;'>كلامك مع ماما:</h3>", unsafe_allow_html=True)
     for query, response in st.session_state["chat_history"]:
         st.markdown(f"<p style='color: #d2691e;'><strong>أنت:</strong> {query}</p>", unsafe_allow_html=True)
-        st.markdown(f"<p style='color: #d2691e;'><strong>ماما:</strong> {response} 🍪</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='color: #d2691e;'><strong>ماما:</strong> {response} </p>", unsafe_allow_html=True)
 
 # Text input for user query placed below the conversation
 user_query = st.text_input("ابعت..", "")
